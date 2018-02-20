@@ -24,7 +24,15 @@ def sub_matrix(matrix1, matrix2):
 
 def recompose_matrix(c11, c12, c21, c22):
     size = len(c11)
-    print(c11, c12, c21, c22)
+    for i in range(size):
+        for j in range(size):
+            c11[i].append(c12[i][j])
+            c21[i].append(c22[i][j])
+
+    for i in range(size):
+        c11.append(c21[i])
+
+    return c11
 
 
 def strassen_multiplication(matrix1, matrix2):
@@ -37,16 +45,16 @@ def strassen_multiplication(matrix1, matrix2):
 
     p1 = strassen_multiplication(add_matrix(a[0][0], a[1][1]), add_matrix(b[0][0], b[1][1]))
     p2 = strassen_multiplication(add_matrix(a[1][0], a[1][1]), b[0][0])
-    p3 = strassen_multiplication(a[0][0], sub_matrix(a[0][1], a[1][1]))
-    p4 = strassen_multiplication(a[1][1], sub_matrix(a[1][0], a[0][0]))
+    p3 = strassen_multiplication(a[0][0], sub_matrix(b[0][1], b[1][1]))
+    p4 = strassen_multiplication(a[1][1], sub_matrix(b[1][0], b[0][0]))
     p5 = strassen_multiplication(add_matrix(a[0][0], a[0][1]), b[1][1])
     p6 = strassen_multiplication(sub_matrix(a[1][0], a[0][0]), add_matrix(b[0][0], b[0][1]))
     p7 = strassen_multiplication(sub_matrix(a[0][1], a[1][1]), add_matrix(b[1][0], b[1][1]))
 
-    c11 = sub_matrix(add_matrix(p1, p4), add_matrix(p5, p7))
+    c11 = add_matrix(sub_matrix(add_matrix(p1, p4), p5), p7)
     c12 = add_matrix(p3, p5)
     c21 = add_matrix(p2, p4)
-    c22 = sub_matrix(add_matrix(p1, p3), add_matrix(p2, p6))
+    c22 = add_matrix(sub_matrix(add_matrix(p1, p3), p2), p6)
 
     return recompose_matrix(c11, c12, c21, c22)
 
