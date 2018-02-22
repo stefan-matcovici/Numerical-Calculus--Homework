@@ -9,7 +9,7 @@ class Matrix:
 
     def __add__(self, other):
         if other.size != self.size:
-            raise ValueError("Invalid matrix to add")
+            raise ValueError("Invalid matrix to add" + str(other) + str(self))
         return Matrix([[self.data[i][j] + other.data[i][j] for j in range(self.size)] for i in range(self.size)])
 
     def __sub__(self, other):
@@ -23,6 +23,9 @@ class Matrix:
             return self * other
 
         self.pad()
+        other.pad()
+
+        half = self.size // 2
 
         a = self.slice(half)
         b = other.slice(half)
@@ -40,10 +43,10 @@ class Matrix:
         c21 = p2 + p4
         c22 = p1 + p3 - p2 + p6
 
-        self.recompose(c11, c12, c21, c22)
         self.unpad()
+        other.unpad()
 
-        return self
+        return self.recompose(c11, c12, c21, c22)
 
     def __len__(self):
         return self.size
@@ -71,6 +74,7 @@ class Matrix:
                  Matrix([x[size:] for x in self.data[size:]])]]
 
     def recompose(self, c11, c12, c21, c22):
+        result = Matrix(self.data)
         size = len(c11)
         for i in range(size):
             for j in range(size):
@@ -80,14 +84,15 @@ class Matrix:
         for i in range(size):
             c11.data.append(c21.data[i])
 
-        self.data = c11.data
+        result.data = c11.data
+        return result
 
     def next_power_of_2(self):
         return 1 if self.size == 0 else 2 ** math.ceil(math.log2(self.size))
 
     def pad(self):
         self.size = self.next_power_of_2()
-        pad_blank_line1 = [0] *self.size
+        pad_blank_line1 = [0] * self.size
         pad_blank_line2 = [0] * (self.size - self.unpad_size)
 
         for i in range(self.unpad_size):
@@ -102,4 +107,3 @@ class Matrix:
 
         self.size = self.unpad_size
         self.data = self.data[:self.size]
-
