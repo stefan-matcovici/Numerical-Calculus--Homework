@@ -28,7 +28,7 @@ def tridiagonal(matrix, l, size):
 
 
 if __name__ == '__main__':
-    m = np.array(io.read_matrix("matrix.test"), dtype="float64")
+    m = np.array(io.read_matrix("../test/matrix2.test"), dtype="float64")
     size = m.shape
 
     b = np.copy(m[:, size[0]])
