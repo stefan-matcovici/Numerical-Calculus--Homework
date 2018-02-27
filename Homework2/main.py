@@ -1,6 +1,8 @@
 import numpy as np
-
+import copy
 from utils import io
+from utils import matrix_generator
+import math
 
 epsilon = 10 ** -5
 
@@ -9,44 +11,65 @@ def nonzero(x):
     return np.abs(x) > epsilon
 
 
+def argmax(lst):
+    return lst.index(max(lst))
+
+
+def get_pivot(lower_elements):
+    return argmax(lower_elements)
+
+
 def tridiagonal(matrix, l, size):
-    lower_elements = matrix.transpose()[l][l:]
-    nonzero_elements = np.where(nonzero(lower_elements))
+    lower_elements = [matrix[i][l] for i in range(l, size)]
+    pivot = get_pivot(lower_elements)
 
-    if len(nonzero_elements[0]) == 0:
-        return None
+    i0 = pivot + l
 
-    i0 = nonzero_elements[0][0] + l
+    matrix[i0], matrix[l] = matrix[l], matrix[i0]
 
-    matrix[[i0, l]] = matrix[[l, i0]]
+    if not nonzero(matrix[l][l]):
+        return False
 
     for i in range(l + 1, size):
-        f = matrix[i, l] / matrix[l][l]
+        f = matrix[i][l] / matrix[l][l]
         for j in range(l + 1, size + 1):
-            matrix[i, j] = matrix[i, j] - f * matrix[l, j]
-        matrix[i, l] = 0
+            matrix[i][j] = matrix[i][j] - f * matrix[l][j]
+        matrix[i][l] = 0
 
+    return True
+
+def print_matrix(m, size):
+    for i in range(size):
+        for j in range(size):
+            print(str(m[i][j]), end=" ")
+        print()
+    print()
 
 if __name__ == '__main__':
-    m = np.array(io.read_matrix("../test/matrix2.test"), dtype="float64")
-    size = m.shape
+    m = io.read_matrix("../test/system2.test")
+    m = matrix_generator.generate_random_matrix(100, 101, 100)
+    size = len(m)
 
-    b = np.copy(m[:, size[0]])
-    a = np.copy(m[:, :size[0]])
+    b = copy.deepcopy([x[size] for x in m])
+    a = copy.deepcopy([x[:size] for x in m])
 
-    for i in range(size[0]):
-        tridiagonal(m, i, size[0])
+    # print(a)
+    # print(b)
 
-    print(m)
+    for i in range(size):
+        if not tridiagonal(m, i, size):
+            print('Matrix is singular')
+            exit()
 
-    x = [0 for i in range(size[0])]
-    for i in range(size[0] - 1, -1, -1):
+    x = [0 for i in range(size)]
+    for i in range(size - 1, -1, -1):
         s = 0
-        for j in range(i + 1, size[0]):
-            s += x[j] * m[i, j]
-        x[i] = (m[i][size[0]] - s) / m[i, i]
+        for j in range(i + 1, size):
+            s += x[j] * m[i][j]
+        x[i] = (m[i][size] - s) / m[i][i]
 
     print(x)
 
-    print(a @ np.array([0.2941176, -0.3529412, -0.8235294]))
-    print(a @ np.array(x))
+    print(np.linalg.norm(a @ np.array(x)-b))
+    print(np.linalg.norm(x - np.linalg.solve(a, b)))
+    print(np.linalg.norm(x - np.linalg.inv(a).dot(b)))

@@ -150,7 +150,7 @@ class Matrix:
 
     def unpad(self):
         """
-        Eliminates zeros added when padded was done in order to extract the result
+        Eliminates zeros added when padded was done in order to ex
         """
         for i in range(self.size):
             self.data[i] = self.data[i][:self.unpad_size]

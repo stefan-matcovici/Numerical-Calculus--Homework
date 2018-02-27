@@ -36,29 +36,36 @@ print((0.7 * 0.2) * 0.1)
 print(0.7 * (0.2 * 0.1))
 
 # problem 3
-print(problem3.strassen_multiplication(matrix1, matrix2))
+# print(Matrix(matrix1))
+# print(Matrix(matrix2))
 print(Matrix(matrix1).strassen_multiply(Matrix(matrix2), 1))
+print(np.dot(matrix1, matrix2))
 
+# print(Matrix(matrix3))
+# print(Matrix(matrix4))
 print(Matrix(matrix3).strassen_multiply(Matrix(matrix4), 1))
 print(np.dot(matrix3, matrix4))
 
+
+print(Matrix(matrix7))
+print(Matrix(matrix8))
 print(Matrix(matrix7).strassen_multiply(Matrix(matrix8), 0))
 print(Matrix(matrix7) * Matrix(matrix8))
 print(np.dot(matrix7, matrix8))
 
-random_matrix1 = matrix_generator.generate_random_matrix(10, 10, 1000)
-random_matrix2 = matrix_generator.generate_random_matrix(10, 10, 1000)
-
-print(Matrix(random_matrix1))
-print()
-print(Matrix(random_matrix2))
-
-print()
-
-print(timeit.timeit("Matrix(random_matrix1).strassen_multiply(Matrix(random_matrix2), 8)",
-                    setup="from Matrix import Matrix\nfrom utils import matrix_generator\nrandom_matrix1 = matrix_generator.generate_random_matrix(1024, 1024, 1000)\nrandom_matrix2 = matrix_generator.generate_random_matrix(1024, 1024, 1000)",
-                    number=1))
-
-print(timeit.timeit("Matrix(random_matrix1) * Matrix(random_matrix2)",
-                    setup="from Matrix import Matrix\nfrom utils import matrix_generator\nrandom_matrix1 = matrix_generator.generate_random_matrix(1024, 1024, 1000)\nrandom_matrix2 = matrix_generator.generate_random_matrix(1024, 1024, 1000)",
-                    number=1))
+# random_matrix1 = matrix_generator.generate_random_matrix(10, 10, 1000)
+# random_matrix2 = matrix_generator.generate_random_matrix(10, 10, 1000)
+#
+# print(Matrix(random_matrix1))
+# print()
+# print(Matrix(random_matrix2))
+#
+# print()
+#
+# print(timeit.timeit("Matrix(random_matrix1).strassen_multiply(Matrix(random_matrix2), 8)",
+#                     setup="from Matrix import Matrix\nfrom utils import matrix_generator\nrandom_matrix1 = matrix_generator.generate_random_matrix(1024, 1024, 1000)\nrandom_matrix2 = matrix_generator.generate_random_matrix(1024, 1024, 1000)",
+#                     number=1))
+#
+# print(timeit.timeit("Matrix(random_matrix1) * Matrix(random_matrix2)",
+#                     setup="from Matrix import Matrix\nfrom utils import matrix_generator\nrandom_matrix1 = matrix_generator.generate_random_matrix(1024, 1024, 1000)\nrandom_matrix2 = matrix_generator.generate_random_matrix(1024, 1024, 1000)",
+#                     number=1))

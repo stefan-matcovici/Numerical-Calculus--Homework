@@ -10,4 +10,4 @@ def generate_random_matrix(n, m, max_value=1):
     :param max_value the maximum value of an element
 
     """
-    return [[random.random()*max_value for x in range(n)] for e in range(m)]
+    return [[random.random()*max_value for x in range(m)] for e in range(n)]
