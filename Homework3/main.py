@@ -18,6 +18,6 @@ if __name__ == "__main__":
 
 
     # a.print()
-    result.print()
+    # result.print()
     print(result.compare(aplusb))
 

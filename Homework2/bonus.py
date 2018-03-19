@@ -48,7 +48,7 @@ def print_matrix(m, size):
 
 
 if __name__ == '__main__':
-    m = io.read_matrix("../test/system3.test")
+    m = io.read_matrix("../test/system4.test")
     size = len(m)
 
     B = copy.deepcopy([x[size] for x in m])

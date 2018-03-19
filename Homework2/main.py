@@ -4,7 +4,7 @@ from utils import io
 from utils import matrix_generator
 import math
 
-epsilon = 10 ** -5
+epsilon = 10 ** -12
 
 
 def nonzero(x):
@@ -12,7 +12,7 @@ def nonzero(x):
 
 
 def argmax(lst):
-    return lst.index(max(lst))
+    return lst.index(max(lst, key=lambda x: abs(x)))
 
 
 def get_pivot(lower_elements):
@@ -38,6 +38,7 @@ def tridiagonal(matrix, l, size):
 
     return True
 
+
 def print_matrix(m, size):
     for i in range(size):
         for j in range(size):
@@ -45,9 +46,11 @@ def print_matrix(m, size):
         print()
     print()
 
+
 if __name__ == '__main__':
     m = io.read_matrix("../test/system2.test")
     m = matrix_generator.generate_random_matrix(100, 101, 100)
+    m[0][0] = epsilon * 10
     size = len(m)
 
     b = copy.deepcopy([x[size] for x in m])
@@ -58,7 +61,7 @@ if __name__ == '__main__':
 
     for i in range(size):
         if not tridiagonal(m, i, size):
-            print('Matrix is singular')
+            print('Matrix is not singular')
             exit()
 
     x = [0 for i in range(size)]
@@ -66,10 +69,13 @@ if __name__ == '__main__':
         s = 0
         for j in range(i + 1, size):
             s += x[j] * m[i][j]
+        if not nonzero(m[i][i]):
+            print("Matrix is singular")
+            exit()
         x[i] = (m[i][size] - s) / m[i][i]
 
     print(x)
 
-    print(np.linalg.norm(a @ np.array(x)-b))
+    print(np.linalg.norm(a @ np.array(x) - b))
     print(np.linalg.norm(x - np.linalg.solve(a, b)))
     print(np.linalg.norm(x - np.linalg.inv(a).dot(b)))
