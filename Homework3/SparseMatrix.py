@@ -11,6 +11,10 @@ class SparseMatrix:
         for line in a:
             self.append_element(line[1], [line[0], line[2]])
 
+    def store_as_columns(self, a):
+        for line in a:
+            self.append_element(line[2], [line[0], line[1]])
+
     def insert_element(self, line, element):
         self.data[line].insert(self.get_index_of_insertion(self.data[line], element[1]), element)
 
@@ -57,6 +61,21 @@ class SparseMatrix:
 
         return result
 
+    def __mul__(self, other):
+        result = SparseMatrix(self.size, [0 for i in range(self.size)])
+
+        for i in range(len(self.data)):
+            for j in range(len(other.data)):
+                sum = 0
+                for k1 in range(len(self.data[i])):
+                    for k2 in range(len(other.data[j])):
+                        if self.data[i][k1][1] == other.data[j][k2][1]:
+                            sum += self.data[i][k1][0] * other.data[j][k2][0]
+                if sum != 0:
+                    result.append_element(i, [sum, j])
+
+        return result
+
     def search_index(self, line, column):
         size = len(line)
 
@@ -98,10 +117,10 @@ class SparseMatrix:
 
         return diff
 
-    def print(self):
-        print(self.size)
-        print()
-
+    def __str__(self):
+        str1 = ""
         for i in range(len(self.data)):
             for element in self.data[i]:
-                print((element[0], i, element[1]))
+                str1 += str((element[0], i, element[1])) + "\n"
+
+        return str1
