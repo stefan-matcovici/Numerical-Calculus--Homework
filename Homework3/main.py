@@ -31,5 +31,7 @@ if __name__ == "__main__":
     aorib.store(file_matrix3[1])
 
     result = a * b
-    print(str(result))
+    f = open("../test/aoribprim.txt", "w")
+    f.write(str(result))
+
 
