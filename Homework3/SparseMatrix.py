@@ -62,7 +62,7 @@ class SparseMatrix:
 
         return result
 
-    def binary_dot_product(self, i, j, other, result):
+    def binary_dot_product(self, i, j, other):
         result = 0
         line1 = self.data[i]
         line2 = other.data[j]
