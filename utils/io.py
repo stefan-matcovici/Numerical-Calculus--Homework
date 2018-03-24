@@ -17,4 +17,4 @@ def read_system(filename):
 
         a = list(map(line_mapper, list(map(lambda x: x[:-1].split(","), lines[2 + system_size + 1:]))))
 
-        return system_size, a, b
+        return system_size, b, a

@@ -3,16 +3,22 @@ import copy
 
 
 class SparseMatrix:
-    def __init__(self, size, b):
+    def __init__(self, size, b, data=None, columns=False):
         self.size = size
         self.b = b
         self.data = [[] for i in range(self.size)]
 
-    def store(self, a):
+        if data:
+            if columns:
+                self.__store_as_columns__(data)
+            else:
+                self.__store__(data)
+
+    def __store__(self, a):
         for line in a:
             self.append_element(line[1], [line[0], line[2]])
 
-    def store_as_columns(self, a):
+    def __store_as_columns__(self, a):
         for line in a:
             self.append_element(line[2], [line[0], line[1]])
 
