@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     result = a + b
 
-    print(result.compare(aplusb))
+    print(result - aplusb)
 
     file_matrix1 = io.read_system("../test/a.txt")
     a = SparseMatrix(file_matrix1[0], file_matrix1[2])
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     aorib.store(file_matrix3[1])
 
     result = a * b
-    f = open("../test/aoribprim.txt", "w")
-    f.write(str(result))
+
+    print(result - aorib)
 
 

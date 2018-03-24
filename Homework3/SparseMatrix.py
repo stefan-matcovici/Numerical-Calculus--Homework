@@ -1,6 +1,7 @@
 import numpy as np
 import copy
 
+
 class SparseMatrix:
     def __init__(self, size, b):
         self.size = size
@@ -46,34 +47,55 @@ class SparseMatrix:
 
         return left + 1 if column > line[left][1] else left
 
-    def __add__(self, other):
-        result = SparseMatrix(self.size, [0 for i in range(self.size)])
+    def dot_product(self, i, j, other):
+        # result = self.basic_scalar_product(i, j, other)
+        #
+        # result = self.binary_scalar_product(i, j, other)
 
-        result.b = [x + y for x, y in zip(self.b, other.b)]
-
-        for i in range(len(self.data)):
-            for element in self.data[i]:
-                result.append_element(i, element)
-
-        for i in range(len(other.data)):
-            for element in other.data[i]:
-                result.append_element(i, element)
+        result = self.merge_dot_product(i, j, other)
 
         return result
 
-    def __mul__(self, other):
-        result = SparseMatrix(self.size, [0 for i in range(self.size)])
+    def binary_dot_product(self, i, j, other, result):
+        result = 0
+        line1 = self.data[i]
+        line2 = other.data[j]
+        for element1 in line1:
+            index = other.search_index(line2, element1[1])
+            if index != -1:
+                result += element1[0] * line2[index][0]
+        return result
 
-        for i in range(len(self.data)):
-            for j in range(len(other.data)):
-                sum = 0
-                for k1 in range(len(self.data[i])):
-                    for k2 in range(len(other.data[j])):
-                        if self.data[i][k1][1] == other.data[j][k2][1]:
-                            sum += self.data[i][k1][0] * other.data[j][k2][0]
-                if sum != 0:
-                    result.append_element(i, [sum, j])
+    def merge_dot_product(self, i, j, other):
+        result = 0
 
+        line1 = self.data[i]
+        line2 = other.data[j]
+
+        i = 0
+        j = 0
+        n = len(line1)
+        m = len(line2)
+        while i < n and j < m:
+            c1 = line1[i][1]
+            c2 = line2[j][1]
+
+            if c1 == c2:
+                result += line1[i][0] * line2[j][0]
+                i += 1
+                j += 1
+            elif c1 > c2:
+                j += 1
+            else:
+                i += 1
+        return result
+
+    def basic_dot_product(self, i, j, other):
+        result = 0
+        for k1 in range(len(self.data[i])):
+            for k2 in range(len(other.data[j])):
+                if self.data[i][k1][1] == other.data[j][k2][1]:
+                    result += self.data[i][k1][0] * other.data[j][k2][0]
         return result
 
     def search_index(self, line, column):
@@ -94,14 +116,14 @@ class SparseMatrix:
 
         return -1
 
-    def compare(self, other):
-        diff = np.linalg.norm([x - y for x, y in zip(self.b, other.b)])
-
+    def __sub__(self, other):
+        # diff = np.linalg.norm([x - y for x, y in zip(self.b, other.b)])
+        diff = 0
         for i in range(len(self.data)):
             for element in self.data[i]:
                 pos = other.search_index(other.data[i], element[1])
                 if pos != -1:
-                    diff += np.linalg.norm(element[0]-other.data[i][pos][0])
+                    diff += np.linalg.norm(element[0] - other.data[i][pos][0])
                 else:
                     print("error")
                     diff += np.linalg.norm(element[0])
@@ -110,12 +132,38 @@ class SparseMatrix:
             for element in other.data[i]:
                 pos = self.search_index(self.data[i], element[1])
                 if pos != -1:
-                    diff += np.linalg.norm(element[0]-self.data[i][pos][0])
+                    diff += np.linalg.norm(element[0] - self.data[i][pos][0])
                 else:
                     print("error")
                     diff += np.linalg.norm(element[0])
 
         return diff
+
+    def __add__(self, other):
+        result = SparseMatrix(self.size, [0 for i in range(self.size)])
+
+        result.b = [x + y for x, y in zip(self.b, other.b)]
+
+        for i in range(len(self)):
+            for element in self.data[i]:
+                result.append_element(i, element)
+
+        for i in range(len(other)):
+            for element in other.data[i]:
+                result.append_element(i, element)
+
+        return result
+
+    def __mul__(self, other):
+        result = SparseMatrix(self.size, [0 for i in range(self.size)])
+
+        for i in range(len(self)):
+            for j in range(len(other)):
+                product = self.dot_product(i, j, other)
+                if product != 0:
+                    result.append_element(i, [product, j])
+
+        return result
 
     def __str__(self):
         str1 = ""
@@ -124,3 +172,6 @@ class SparseMatrix:
                 str1 += str((element[0], i, element[1])) + "\n"
 
         return str1
+
+    def __len__(self):
+        return len(self.data)
