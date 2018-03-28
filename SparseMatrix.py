@@ -3,6 +3,7 @@ import copy
 
 EPSILON = 10 ** -7
 
+
 class SparseMatrix:
     def __init__(self, size, b, data=None, columns=False):
         self.size = size
@@ -125,17 +126,17 @@ class SparseMatrix:
 
     def verify(self):
         for i in range(len(self)):
-            if len(self.data[i])>10:
+            if len(self.data[i]) > 10:
                 raise Exception("More than 10 elements on line " + i)
 
     def multiply_vector(self, v):
-        result = []
+        result = np.array([])
 
         for line in self.data:
             s = 0
             for element in line:
-                s += element[0]*v[element[1]]
-            result.append(s)
+                s += element[0] * v[element[1]]
+            result = np.append(result, s)
 
         return result
 
@@ -213,3 +214,30 @@ class SparseMatrix:
 
     def __len__(self):
         return len(self.data)
+
+    def solve_Gauss_Sidel(self, epsilon, kmax):
+        for i in range(len(self.data)):
+            ok = False
+            for j in range(len(self.data[i])):
+                if i == self.data[i][j][1] and self.data[i][j][0] > epsilon:
+                    ok = True
+                    break
+            if not ok:
+                raise Exception("Matricea are 0 pe diagonala.")
+
+        solution = np.zeros((self.size, ))
+        for k in range(kmax):
+            print(k)
+            for i in range(self.size):
+                bi = self.b[i]
+                big_sum = 0
+
+                aii = 0
+                for j in range(len(self.data[i])):
+                    if self.data[i][j][1] == i:
+                        aii = self.data[i][j][0]
+                    big_sum += self.data[i][j][0] * solution[self.data[i][j][1]]
+
+                solution[i] = (bi - big_sum) / aii
+
+        return solution
