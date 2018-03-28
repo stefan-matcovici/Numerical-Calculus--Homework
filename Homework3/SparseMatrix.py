@@ -1,6 +1,7 @@
 import numpy as np
 import copy
 
+EPSILON = 10 ** -7
 
 class SparseMatrix:
     def __init__(self, size, b, data=None, columns=False):
@@ -121,6 +122,37 @@ class SparseMatrix:
                 left = mid + 1
 
         return -1
+
+    def verify(self):
+        for i in range(len(self)):
+            if len(self.data[i])>10:
+                raise Exception("More than 10 elements on line " + i)
+
+    def multiply_vector(self, v):
+        result = []
+
+        for line in self.data:
+            s = 0
+            for element in line:
+                s += element[0]*v[element[1]]
+            result.append(s)
+
+        return result
+
+    def __eq__(self, other):
+        for i in range(len(self.data)):
+            for element in self.data[i]:
+                pos = other.search_index(other.data[i], element[1])
+                if (pos != -1 and abs(element[0] - other.data[i][pos][0]) > EPSILON) or pos == -1:
+                    return False
+
+        for i in range(len(other.data)):
+            for element in other.data[i]:
+                pos = self.search_index(self.data[i], element[1])
+                if (pos != -1 and abs(element[0] - self.data[i][pos][0]) > EPSILON) or pos == -1:
+                    return False
+
+        return True
 
     def __sub__(self, other):
         # diff = np.linalg.norm([x - y for x, y in zip(self.b, other.b)])
