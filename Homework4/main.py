@@ -5,11 +5,11 @@ from utils import io
 from SparseMatrix import SparseMatrix
 
 if __name__ == "__main__":
-    file_matrix1 = io.read_system("../test/m_rar_2018_1.txt")
+    file_matrix1 = io.read_system("../test/m_rar_2018_5.txt")
     matrix = SparseMatrix(*file_matrix1)
     matrix.verify()
 
-    solution = matrix.solve_Gauss_Sidel(0.0001, 1)
+    solution = matrix.solve_Gauss_Sidel(0.00000001, 10)
 
     print(solution)
 

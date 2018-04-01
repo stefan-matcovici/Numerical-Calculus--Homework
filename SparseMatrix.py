@@ -226,6 +226,7 @@ class SparseMatrix:
                 raise Exception("Matricea are 0 pe diagonala.")
 
         solution = np.zeros((self.size, ))
+        tmp = self.b
         for k in range(kmax):
             print(k)
             for i in range(self.size):
@@ -236,8 +237,14 @@ class SparseMatrix:
                 for j in range(len(self.data[i])):
                     if self.data[i][j][1] == i:
                         aii = self.data[i][j][0]
-                    big_sum += self.data[i][j][0] * solution[self.data[i][j][1]]
+                    else:
+                        big_sum += self.data[i][j][0] * solution[self.data[i][j][1]]
 
                 solution[i] = (bi - big_sum) / aii
+
+            if np.linalg.norm(tmp - solution) < epsilon:
+                break
+
+            tmp = np.array(solution)
 
         return solution
