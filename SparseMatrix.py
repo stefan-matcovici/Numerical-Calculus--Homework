@@ -215,7 +215,7 @@ class SparseMatrix:
     def __len__(self):
         return len(self.data)
 
-    def solve_Gauss_Sidel(self, epsilon, kmax):
+    def solve_Gauss_Sidel(self, epsilon, threshold, kmax):
         for i in range(len(self.data)):
             ok = False
             for j in range(len(self.data[i])):
@@ -244,7 +244,8 @@ class SparseMatrix:
 
             if np.linalg.norm(tmp - solution) < epsilon:
                 break
-
+            if np.linalg.norm(tmp - solution) > threshold:
+                raise Exception("Divergenta!")
             tmp = np.array(solution)
 
         return solution

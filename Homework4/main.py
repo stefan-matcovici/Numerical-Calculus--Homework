@@ -5,7 +5,7 @@ from utils import io
 from SparseMatrix import SparseMatrix
 
 if __name__ == "__main__":
-    file_matrix1 = io.read_system("../test/m_rar_2018_5.txt")
+    file_matrix1 = io.read_system("../test/m_rar_2018_1.txt")
     matrix = SparseMatrix(*file_matrix1)
     matrix.verify()
 
