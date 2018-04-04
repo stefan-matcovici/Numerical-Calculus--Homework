@@ -27,7 +27,7 @@ class Polynomial:
                 xk_2 = random.uniform(-self.r + step * step_length, -self.r + step * step_length + step_length)
 
                 for k in range(kmax):
-                    a, b, c = self.__get_abc__(xk, xk_1, xk_2)
+                    a, b, c = self.__get_abc__(xk, xk_1, xk_2, self.get_result_horner)
 
                     if b * b - 4 * a * c > 0:
                         new_xk, delta, maxi = self.__get_next_xk__(a, b, c, xk)
@@ -49,20 +49,23 @@ class Polynomial:
 
         return roots
 
-    def get_derivative_value1(self, value, h):
+    def get_local_minimums(self, interval):
+        pass
+
+    def get_derivative_value1(self, value, h=1):
         return (3 * self.get_result_horner(value) -
                 4 * self.get_result_horner(value - h) +
                 self.get_result_horner(value - 2 * h)
                ) / 2 * h
 
-    def get_derivative_value2(self, value, h):
+    def get_derivative_value2(self, value, h=1):
         return (-self.get_result_horner(value + 2 * h)
                 + 8 * self.get_result_horner(value + h)
                 - 8 * self.get_result_horner(value - h)
                 + self.get_result_horner(value - 2 * h)
                ) / 12 * h
 
-    def get_second_derivative_value(self, value, h):
+    def get_second_derivative_value(self, value, h=1):
         return (
                 -self.get_result_horner(value + 2 * h)
                 + 16 * self.get_result_horner(value + h)
@@ -89,12 +92,12 @@ class Polynomial:
         h0 = xk_1 - xk_2
         h1 = xk - xk_1
 
-        delta_0 = (self.get_result_horner(xk_1) - self.get_result_horner(xk_2)) / h0
-        delta_1 = (self.get_result_horner(xk) - self.get_result_horner(xk_1)) / h1
+        delta_0 = (f(xk_1) - f(xk_2)) / h0
+        delta_1 = (f(xk) - f(xk_1)) / h1
 
         a = (delta_1 - delta_0) / (h1 + h0)
         b = a * h1 + delta_1
-        c = self.get_result_horner(xk)
+        c = f(xk)
 
         return a, b, c
 
