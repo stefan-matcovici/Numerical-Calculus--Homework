@@ -49,6 +49,28 @@ class Polynomial:
 
         return roots
 
+    def get_derivative_value1(self, value, h):
+        return (3 * self.get_result_horner(value) -
+                4 * self.get_result_horner(value - h) +
+                self.get_result_horner(value - 2 * h)
+               ) / 2 * h
+
+    def get_derivative_value2(self, value, h):
+        return (-self.get_result_horner(value + 2 * h)
+                + 8 * self.get_result_horner(value + h)
+                - 8 * self.get_result_horner(value - h)
+                + self.get_result_horner(value - 2 * h)
+               ) / 12 * h
+
+    def get_second_derivative_value(self, value, h):
+        return (
+                -self.get_result_horner(value + 2 * h)
+                + 16 * self.get_result_horner(value + h)
+                - 30 * self.get_result_horner(value)
+                + 16 * self.get_result_horner(value - h)
+                - self.get_result_horner(value - 2 * h)
+               ) / 12 * h
+
     def get_result(self, value):
         result = 0
         for i in range(self.n + 1):
@@ -58,21 +80,21 @@ class Polynomial:
 
     def get_result_horner(self, value):
         bi = self.coefficients[0]
-        for i in range(self.n + 1):
+        for i in range(1, self.n + 1):
             bi = self.coefficients[i] + bi * value
 
         return bi
 
-    def __get_abc__(self, xk, xk_1, xk_2):
+    def __get_abc__(self, xk, xk_1, xk_2, f):
         h0 = xk_1 - xk_2
         h1 = xk - xk_1
 
-        delta_0 = (self.get_result(xk_1) - self.get_result(xk_2)) / h0
-        delta_1 = (self.get_result(xk) - self.get_result(xk_1)) / h1
+        delta_0 = (self.get_result_horner(xk_1) - self.get_result_horner(xk_2)) / h0
+        delta_1 = (self.get_result_horner(xk) - self.get_result_horner(xk_1)) / h1
 
         a = (delta_1 - delta_0) / (h1 + h0)
         b = a * h1 + delta_1
-        c = self.get_result(xk)
+        c = self.get_result_horner(xk)
 
         return a, b, c
 
@@ -88,5 +110,5 @@ class Polynomial:
 
 
 p = Polynomial('../test/poli.txt')
-print(p.approximate_roots(0.001, retries=10, kmax=10, epsilon=0.0000001))
+print(p.approximate_roots(0.1, retries=2, kmax=100, epsilon=0.0000001))
 
