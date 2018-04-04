@@ -15,7 +15,7 @@ class Polynomial:
             self.r = (abs(self.coefficients[0]) + max([abs(coefficient) for coefficient in self.coefficients])) / abs(
                 self.coefficients[0])
 
-    def approximate_roots(self, step_length, retries, kmax, epsilon):
+    def approximate_roots(self, step_length, retries, kmax, epsilon, f):
         roots = set()
 
         nr_steps = int(2 * self.r / step_length)
@@ -27,7 +27,7 @@ class Polynomial:
                 xk_2 = random.uniform(-self.r + step * step_length, -self.r + step * step_length + step_length)
 
                 for k in range(kmax):
-                    a, b, c = self.__get_abc__(xk, xk_1, xk_2, self.get_result_horner)
+                    a, b, c = self.__get_abc__(xk, xk_1, xk_2, f)
 
                     if b * b - 4 * a * c > 0:
                         new_xk, delta, maxi = self.__get_next_xk__(a, b, c, xk)
@@ -113,5 +113,7 @@ class Polynomial:
 
 
 p = Polynomial('../test/poli.txt')
-print(p.approximate_roots(0.1, retries=2, kmax=100, epsilon=0.0000001))
+print(p.approximate_roots(0.1, retries=10, kmax=100, epsilon=0.000000001, f=p.get_result_horner))
+print([x if p.get_second_derivative_value(float(x)) > 0 else None for x in p.approximate_roots(0.1, retries=2, kmax=100, epsilon=0.000000001, f=p.get_derivative_value1)])
+print([x if p.get_second_derivative_value(float(x)) > 0 else None for x in p.approximate_roots(0.1, retries=2, kmax=100, epsilon=0.000000001, f=p.get_derivative_value2)])
 
