@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import numpy as np
+
 # from Polynomial import Polynomial
 #
 # x0 = 1
@@ -16,7 +18,6 @@ import matplotlib.pyplot as plt
 #         mapping[x0 + i * h] = function(x0 + i * h)
 #
 #     return mapping[value]
-import numpy as np
 
 x0 = 0
 xn = 5
@@ -48,16 +49,17 @@ def get_Lagrange_interpolation_value_dumb(value, value_function):
 
     return sum
 
+
 def get_Lagrange_interpolation_value(value, value_function):
     t = (value - x0) / h
     y0 = value_function(x0)
 
     deltas = get_delta_f_x0(value_function)
-    sks = get_sks(t)
+    sks = get_sks_dumb(t)
 
     lagrange_value = y0
     for i in range(n):
-        lagrange_value += deltas[i] * sks[i]
+        lagrange_value += deltas[i + 1] * sks[i]
 
     return lagrange_value
 
@@ -79,6 +81,20 @@ def get_x(i):
     return x0 + (i + 1) * h
 
 
+def get_sks_dumb(t):
+    sks = []
+
+    for k in range(1, n + 1):
+        result = 1
+        for i in range(0, k):
+            result *= (t - i)
+        for i in range(1, k + 1):
+            result /= k
+
+        sks.append(result)
+    return sks
+
+
 def get_sks(t):
     sks = [t]
 
@@ -91,11 +107,16 @@ def get_sks(t):
 def get_least_squares_value(value):
     pass
 
+
+print(get_Lagrange_interpolation_value(1.5, f2))
+print(get_sks(10))
+print(get_sks_dumb(10))
+
 xs = np.arange(x0, xn, h)
 ys = [f2(x) for x in xs]
 plt.plot(xs, ys, linewidth=2.0)
 
 xs = np.arange(x0, xn, h / 100)
-ys = [get_Lagrange_interpolation_value_dumb(x, f2) for x in xs]
+ys = [get_Lagrange_interpolation_value(x, f2) for x in xs]
 plt.plot(xs, ys, linewidth=2.0)
 plt.show()
