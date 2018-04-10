@@ -55,7 +55,7 @@ def get_Lagrange_interpolation_value(value, value_function):
     y0 = value_function(x0)
 
     deltas = get_delta_f_x0(value_function)
-    sks = get_sks_dumb(t)
+    sks = get_sks(t)
 
     lagrange_value = y0
     for i in range(n):
@@ -89,7 +89,7 @@ def get_sks_dumb(t):
         for i in range(0, k):
             result *= (t - i)
         for i in range(1, k + 1):
-            result /= k
+            result /= i
 
         sks.append(result)
     return sks
@@ -99,7 +99,7 @@ def get_sks(t):
     sks = [t]
 
     for k in range(1, n):
-        sks.append(sks[k - 1] * ((t - k + 1) / k))
+        sks.append(sks[k - 1] * ((t - k) / (k + 1)))
 
     return sks
 
@@ -109,8 +109,8 @@ def get_least_squares_value(value):
 
 
 print(get_Lagrange_interpolation_value(1.5, f2))
-print(get_sks(10))
-print(get_sks_dumb(10))
+# print(get_sks(10))
+# print(get_sks_dumb(10))
 
 xs = np.arange(x0, xn, h)
 ys = [f2(x) for x in xs]
