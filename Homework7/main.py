@@ -18,6 +18,7 @@ import numpy as np
 #         mapping[x0 + i * h] = function(x0 + i * h)
 #
 #     return mapping[value]
+from Polynomial import Polynomial
 
 x0 = 0
 xn = 5
@@ -104,13 +105,31 @@ def get_sks(t):
     return sks
 
 
-def get_least_squares_value(value):
-    pass
+def get_least_squares_value(value, value_function, m):
+    B = np.zeros((m, m))
+    f = np.zeros((m, ))
 
+    for i in range(m):
+        for j in range(m):
+            sum = 0
+            for k in range(n):
+                sum += pow(get_x(k), i + j)
+
+            B[i, j] = sum
+
+    for i in range(m):
+        sum = 0
+        for k in range(n):
+            sum += value_function(get_x(k)) * pow(get_x(k), i)
+        f[i] = sum
+
+    solution = np.linalg.solve(B, f)
+
+    p = Polynomial(m - 1, np.flip(solution, 0))
+
+    return p.get_result_horner(value)
 
 print(get_Lagrange_interpolation_value(1.5, f2))
-# print(get_sks(10))
-# print(get_sks_dumb(10))
 
 xs = np.arange(x0, xn, h)
 ys = [f2(x) for x in xs]
@@ -119,4 +138,11 @@ plt.plot(xs, ys, linewidth=2.0)
 xs = np.arange(x0, xn, h / 100)
 ys = [get_Lagrange_interpolation_value(x, f2) for x in xs]
 plt.plot(xs, ys, linewidth=2.0)
+
+xs = np.arange(x0, xn, h / 100)
+ys = [get_least_squares_value(x, f2, 21) for x in xs]
+plt.plot(xs, ys, linewidth=2.0)
+
 plt.show()
+
+
