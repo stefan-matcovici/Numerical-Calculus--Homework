@@ -127,7 +127,7 @@ class SparseMatrix:
     def verify(self):
         for i in range(len(self)):
             if len(self.data[i]) > 10:
-                raise Exception("More than 10 elements on line " + i)
+                raise Exception("More than 10 elements on line " + str(i))
 
     def multiply_vector(self, v):
         result = np.array([])

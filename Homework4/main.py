@@ -1,5 +1,5 @@
 import numpy as np
-
+np.set_printoptions(threshold=2018)
 from utils import io
 
 from SparseMatrix import SparseMatrix
@@ -9,7 +9,7 @@ if __name__ == "__main__":
     matrix = SparseMatrix(*file_matrix1)
     matrix.verify()
 
-    solution = matrix.solve_Gauss_Sidel(0.00000001, 10)
+    solution = matrix.solve_Gauss_Sidel(0.00000001, 50, 10**10)
 
     print(solution)
 
