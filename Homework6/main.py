@@ -33,27 +33,47 @@ def dot_product(v1, v2):
     return sum([i * j for i, j in zip(v1, v2)])
 
 
-if __name__ == "__main__":
-    file_matrix = io.read_system("../test/m_rar_sim_2018.txt", no_b=False)
-    matrix = SparseMatrix(*file_matrix)
-
-    # print(is_symmetric("../test/m_rar_sim_2018.txt"))
-
-    v = generate_random_vector(matrix.size)
+def power_method(A):
+    v = generate_random_vector(A.size)
     print(norm(v))
-
-    w = matrix.multiply_vector(v)
+    w = A.multiply_vector(v)
     l = dot_product(w, v)
     k = 0
-    while k <= KMAX and norm([x - l * y for x, y in zip(w, v)]) > matrix.size * EPSILON:
+    while k <= KMAX and norm([x - l * y for x, y in zip(w, v)]) > A.size * EPSILON:
         n = norm(w)
         v = [x / n for x in w]
 
-        w = matrix.multiply_vector(v)
+        w = A.multiply_vector(v)
         l = dot_product(w, v)
         k += 1
-
+        print(l)
     if k > KMAX:
         print("NU am gasit solutia")
     else:
-        print(v)
+        print("Am oprit dupa " + str(k) + " operatii")
+        print(l)
+
+
+def generate_random_symmetric_matrix(size):
+    m = [[0 for x in range(size)] for y in range(size)]
+    for i in range((size ** 2) / 2):
+        i = random.randint(0, size)
+        j = random.randint(0, size)
+
+        element = random.random() * 1000
+        m[i][j] = element
+        m[j][i] = element
+
+    return m
+
+
+if __name__ == "__main__":
+    file_matrix = io.read_system("../test/m_rar_sim_2018.txt", no_b=False)
+    matrix1 = SparseMatrix(*file_matrix)
+
+    # print(is_symmetric("../test/m_rar_sim_2018.txt"))
+
+    power_method(matrix1)
+
+    # m2 = generate_random_symmetric_matrix(1000)
+    # matrix2 = SparseMatrix(1000, [], m2)
