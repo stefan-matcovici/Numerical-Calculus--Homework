@@ -17,8 +17,7 @@ def get_A(order):
 
 
 def get_first_norm(a):
-    print(a)
-    return max(np.sum(a, axis=0))
+    return max(abs(np.sum(a, axis=0)))
 
 
 def get_infinite_norm(a):
@@ -34,36 +33,70 @@ def compute_v1_1(v, a):
     return result
 
 
+def compute_v1_2(v, a):
+    result1 = np.dot(np.multiply(a, -1), v)
+    intermediate_result = np.copy(result1)
+
+    diagonal = result1.diagonal()
+    np.fill_diagonal(result1, diagonal + 3)
+
+    result = np.dot(intermediate_result, result1)
+    diagonal = result.diagonal()
+    np.fill_diagonal(result, diagonal + 3)
+
+    result = np.dot(v, result)
+
+    return result
+
+
+def compute_v1_3(v, a):
+    result1 = np.dot(v, np.multiply(a, -1))
+    intermediate_result = np.copy(result1)
+
+    diagonal = result1.diagonal()
+    np.fill_diagonal(result1, diagonal + 3)
+
+    diagonal = intermediate_result.diagonal()
+    np.fill_diagonal(intermediate_result, diagonal + 1)
+
+    result = np.multiply(1.0 / 4, np.dot(intermediate_result, result1))
+    result = np.dot(result, result1)
+
+    diagonal = result.diagonal()
+    np.fill_diagonal(result, diagonal + 1)
+
+    result = np.dot(result, v)
+
+    return result
+
+
 def compute_inverse(order, compute_v0, compute_v1):
     a = get_A(order)
-    a1 = get_first_norm(a)
-    a2 = get_infinite_norm(a)
 
-    v0 = v1 = compute_v0(a, a1, a2)
+    v1 = compute_v0(a)
     k = 0
     delta = 1
     while k < K_MAX and EPSILON <= delta <= 10 ** 10:
         v0 = v1
         v1 = compute_v1(v1, a)
         delta = get_first_norm(np.subtract(v1, v0))
-        delta = np.linalg.norm(np.subtract(v1, v0))
-        # print(delta)
-        # delta = abs(sum(np.subtract(v1.ravel(), v0.ravel())))
-        # print(delta)
         k = k + 1
 
     if delta < EPSILON:
-        print("convergenta")
-        print(np.dot(a, v1))
+        print("convergenta dupa " + str(k) + " iteratii")
+        print(v1)
+        print(delta)
     else:
         print("divergenta")
 
 
-def compute_v0_1(a, a1, a2):
+def compute_v0_1(a):
+    a1 = get_first_norm(a)
+    a2 = get_infinite_norm(a)
     return np.divide(a.transpose(), a1 * a2)
 
 
-def compute_v0_2(a, a1, a2):
+def compute_v0_2(a):
     result = np.zeros(a.shape)
     diagonal = a.diagonal()
 
@@ -72,4 +105,6 @@ def compute_v0_2(a, a1, a2):
 
 
 if __name__ == "__main__":
-    compute_inverse(4, compute_v0_2, compute_v1_1)
+    compute_inverse(10, compute_v0_1, compute_v1_1)
+    compute_inverse(10, compute_v0_1, compute_v1_2)
+    compute_inverse(10, compute_v0_2, compute_v1_3)
