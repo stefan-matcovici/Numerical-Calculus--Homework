@@ -15,6 +15,15 @@ class Polynomial:
             self.r = (abs(self.coefficients[0]) + max([abs(coefficient) for coefficient in self.coefficients])) / abs(
                 self.coefficients[0])
 
+    def __init__(self, n, coefficients):
+        self.n = n
+        self.coefficients = coefficients
+
+        assert len(self.coefficients) == self.n + 1
+
+        self.r = (abs(self.coefficients[0]) + max([abs(coefficient) for coefficient in self.coefficients])) / abs(
+            self.coefficients[0])
+
     def approximate_roots(self, step_length, retries, kmax, epsilon, f):
         roots = set()
 
@@ -56,22 +65,22 @@ class Polynomial:
         return (3 * self.get_result_horner(value) -
                 4 * self.get_result_horner(value - h) +
                 self.get_result_horner(value - 2 * h)
-               ) / 2 * h
+                ) / 2 * h
 
     def get_derivative_value2(self, value, h=1):
         return (-self.get_result_horner(value + 2 * h)
                 + 8 * self.get_result_horner(value + h)
                 - 8 * self.get_result_horner(value - h)
                 + self.get_result_horner(value - 2 * h)
-               ) / 12 * h
+                ) / 12 * h
 
     def get_second_derivative_value(self, value, h=1):
         return (
-                -self.get_result_horner(value + 2 * h)
-                + 16 * self.get_result_horner(value + h)
-                - 30 * self.get_result_horner(value)
-                + 16 * self.get_result_horner(value - h)
-                - self.get_result_horner(value - 2 * h)
+                   -self.get_result_horner(value + 2 * h)
+                   + 16 * self.get_result_horner(value + h)
+                   - 30 * self.get_result_horner(value)
+                   + 16 * self.get_result_horner(value - h)
+                   - self.get_result_horner(value - 2 * h)
                ) / 12 * h
 
     def get_result(self, value):
