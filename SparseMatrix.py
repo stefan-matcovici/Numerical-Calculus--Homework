@@ -5,10 +5,13 @@ EPSILON = 10 ** -7
 
 
 class SparseMatrix:
-    def __init__(self, size, b, data=None, columns=False):
+    def __init__(self, size, b, data=None, columns=False, from_matrix=None):
         self.size = size
         self.b = b
         self.data = [[] for i in range(self.size)]
+
+        if from_matrix:
+            self.__store_from_matrix__(from_matrix)
 
         if data:
             if columns:
@@ -23,6 +26,12 @@ class SparseMatrix:
     def __store_as_columns__(self, a):
         for line in a:
             self.append_element(line[2], [line[0], line[1]])
+
+    def __store_from_matrix__(self, a):
+        for i in range(self.size):
+            for j in range(self.size):
+                self.append_element(i, [a[i][j], j])
+
 
     def insert_element(self, line, element):
         self.data[line].insert(self.get_index_of_insertion(self.data[line], element[1]), element)
@@ -124,10 +133,10 @@ class SparseMatrix:
 
         return -1
 
-    def verify(self):
+    def verify(self, num=10):
         for i in range(len(self)):
-            if len(self.data[i]) > 10:
-                raise Exception("More than 10 elements on line " + str(i))
+            if len(self.data[i]) > num:
+                raise Exception("More than {} elements on line ".format(num) + str(i))
 
     def multiply_vector(self, v):
         result = np.array([])

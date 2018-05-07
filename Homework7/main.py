@@ -29,7 +29,7 @@ h = (xn - x0) / n
 def f2(value):
     mapping = dict()
     mapping[0] = 50
-    mapping[1] = 47
+    mapping[1] = 10
     mapping[2] = -2
     mapping[3] = -121
     mapping[4] = -310
@@ -140,7 +140,7 @@ ys = [get_Lagrange_interpolation_value(x, f2) for x in xs]
 plt.plot(xs, ys, linewidth=2.0)
 
 xs = np.arange(x0, xn, h / 100)
-ys = [get_least_squares_value(x, f2, 21) for x in xs]
+ys = [get_least_squares_value(x, f2, 3) for x in xs]
 plt.plot(xs, ys, linewidth=2.0)
 
 plt.show()

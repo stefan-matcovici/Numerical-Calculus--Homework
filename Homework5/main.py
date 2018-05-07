@@ -1,5 +1,7 @@
 import numpy as np
 
+from utils.matrix_generator import generate_random_matrix
+
 K_MAX = 1000
 EPSILON = 10 ** -10
 
@@ -14,6 +16,10 @@ def get_A(order):
     complete_super_diagonal(a, order, 4)
 
     return a
+
+
+def get_random(order):
+    return np.random.rand(order, order)
 
 
 def get_first_norm(a):
@@ -72,6 +78,7 @@ def compute_v1_3(v, a):
 
 def compute_inverse(order, compute_v0, compute_v1):
     a = get_A(order)
+    # a = get_random(order)
 
     v1 = compute_v0(a)
     k = 0
@@ -86,6 +93,10 @@ def compute_inverse(order, compute_v0, compute_v1):
         print("convergenta dupa " + str(k) + " iteratii")
         print(v1)
         print(delta)
+        result = np.dot(a, v1)
+        diagonal = result.diagonal()
+        np.fill_diagonal(result, diagonal - 1)
+        print(get_first_norm(result))
     else:
         print("divergenta")
 
@@ -107,4 +118,4 @@ def compute_v0_2(a):
 if __name__ == "__main__":
     compute_inverse(10, compute_v0_1, compute_v1_1)
     compute_inverse(10, compute_v0_1, compute_v1_2)
-    compute_inverse(10, compute_v0_2, compute_v1_3)
+    compute_inverse(10, compute_v0_1, compute_v1_3)

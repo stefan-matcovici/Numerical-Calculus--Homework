@@ -1,7 +1,7 @@
 import random
 
 
-def generate_random_matrix(n, m, max_value=1):
+def generate_random_matrix(n, m, max_value=1000):
     """
     Generates a random matrix
 

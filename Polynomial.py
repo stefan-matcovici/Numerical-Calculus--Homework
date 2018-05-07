@@ -15,14 +15,14 @@ class Polynomial:
             self.r = (abs(self.coefficients[0]) + max([abs(coefficient) for coefficient in self.coefficients])) / abs(
                 self.coefficients[0])
 
-    def __init__(self, n, coefficients):
-        self.n = n
-        self.coefficients = coefficients
-
-        assert len(self.coefficients) == self.n + 1
-
-        self.r = (abs(self.coefficients[0]) + max([abs(coefficient) for coefficient in self.coefficients])) / abs(
-            self.coefficients[0])
+    # def __init__(self, n, coefficients):
+    #     self.n = n
+    #     self.coefficients = coefficients
+    #
+    #     assert len(self.coefficients) == self.n + 1
+    #
+    #     self.r = (abs(self.coefficients[0]) + max([abs(coefficient) for coefficient in self.coefficients])) / abs(
+    #         self.coefficients[0])
 
     def approximate_roots(self, step_length, retries, kmax, epsilon, f):
         roots = set()
